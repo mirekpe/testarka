@@ -18,7 +18,7 @@ int main() { //Zadanie plum
  
 //-------------------------------testarka---------------------------------------
  
-// Above paste your program, the main function will be called for all *.in files in the program foder
+// Paste your code above, the main function will be called for all *.in files in the program foder
  
 //  Prepare *.in (input) and *.out (for comparison) files yourself, 
 //  or download them from the Olympics website and throw it into the folder with the code.
