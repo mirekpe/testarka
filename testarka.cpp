@@ -94,12 +94,12 @@ string compare_files(string testName, string outName) {
     char lineNoChr[100];
     if((errLineNo)==0) {
         itoa(chkLinesCnt,lineNoChr,10);
-        return ":) dobrze " + trailers + checkText.substr(checkText.length() - checkTextLen)
-            + lineNoChr + "w ";
+        return ":) good " + trailers + checkText.substr(checkText.length() - checkTextLen)
+            + lineNoChr + "r ";
     } else {
         itoa(errLineNo,lineNoChr,10);
-        return ":( ZLE! " + trailers + checkText.substr(checkText.length() - checkTextLen)
-            + " linia " + lineNoChr + " ";
+        return ":( BAD! " + trailers + checkText.substr(checkText.length() - checkTextLen)
+            + " line " + lineNoChr + " ";
     }
 }
  
@@ -175,8 +175,8 @@ int test_main_on_testpack() {
  
         }
         // Write a summary and wait for Enter
-        cout << "\n" << (testOkCount * 100 / files.size()) << "% testow OK,";
-        cout << " wcisnij Enter, aby zakonczyc.\n";
+        cout << "\n" << (testOkCount * 100 / files.size()) << "% tests OK,";
+        cout << " press Enter, to finish.\n";
         cin.get();
     }
  
