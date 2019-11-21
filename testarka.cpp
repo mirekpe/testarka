@@ -146,7 +146,7 @@ int test_main_on_testpack() {
             app_comm_line = app_comm_line + " nowRunMain < " + in_file + " > " + test_file;
             system(app_comm_line.c_str());
  
-          // Instead of call yourself, this code can call exe programs from the current folder
+          // Instead of call himrself, this code can call exe programs from the current folder
           //  (others than the tester, i.e. it should be compiled from your code)
           // with redirected input from all of *.in and an output to *_t.*out
           // (    so a universal tester can be compiled, to do it:
