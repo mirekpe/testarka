@@ -158,8 +158,8 @@ int test_main_on_testpack() {
     if(files.size() == 0)
         cerr << "No files: " << getcwd(NULL, 0) << "/*.in"; 
     else { // wypisz podsumowanie
-        cerr << "\n" << (testOkCount * 100 / files.size()) << "% OK / " << tst_count; //% ok z ilości 
-        cerr << ".  Total: " << (total_time / CLOCKS_PER_SEC) << " s.";  // i czas całkowity
+        cerr << "\n" << (testOkCount * 100 / files.size()) << "% OK / " << tst_count; //% ok z ilosci 
+        cerr << ".  Total: " << (total_time / CLOCKS_PER_SEC) << " s.";  // i czas calkowity
         cerr << "  Max.: " << (max_time / CLOCKS_PER_SEC) << " s.";  // i czas maksymalny
     }
     cerr << "\n\n"; 
