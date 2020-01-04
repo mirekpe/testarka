@@ -1,6 +1,6 @@
 //--------------------------testarka-----------ver2--(pozwala-debugowac-i-dziala-tez-na-linuksie)-------
 
-// Skopiuj testarka.cpp do folderu swojego programu i podlacz przez dodanie w jego ostatniej linii:
+// Skopiuj testarka.cpp do folderu swojego programu i podlacz przez dodanie w programie w ostatniej linii:
 //   #include "testarka.cpp"
 // Uwaga !: zmienne deklarowane przed main() należy ew. wyzerować w main(), np., fill(tabl,tabl+rozmiar);
 //  poniewaz testarka wywoluje main() wielokrotnie, te zmienne sa wyzerowane tylko za pierwszym razem
