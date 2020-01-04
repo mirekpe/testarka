@@ -43,7 +43,7 @@ vector<string> list_dir(const string& folder, const string& filemask = "*") {
         while((de = readdir(dir)) != NULL)
             if(iflike(de->d_name, filemask)) fn_list.push_back(de->d_name);
         closedir(dir);
-    } else perror ("");
+    } // else perror (""); // Zm001. zakomentowane - nie wypisywac bledow, gdy nie ma podfolderow in out   
     return fn_list;
 }
 
