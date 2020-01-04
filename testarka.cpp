@@ -8,7 +8,7 @@
 //  jezeli sam nie umiescisz tej funkcji w main(), po wylaczeniu testarki program moze znacznie spowolnic
 // Uwaga 3: nie zapomnij wylaczyc testarki w gotowym programie (skasuj: #include "testarka.cpp")  
 
-// Testarka wywola funkcje main dla wszystkich plikow *.in w foderze programu
+// Testarka wywola funkcje main dla wszystkich plikow *.in w foderze programu (ew. w podfolderach in out)
 //  Pliki *.in (wejsciowe) i *.out (do porownania) przygotuj sam, albo pobierz ze strony olimpiady
 //  i wrzuc do folderu z progamem. Powinny byc w parach o takiej samej nazwie przed kropka.
 //  Skompiluj i uruchom program (na swoim komputerze! - na Ideone nie bedzie dzialac)
@@ -103,7 +103,7 @@ string compare_files(string testName, string outName) {
 #include <unistd.h>
 int test_main_on_testpack() {
   // Program pozwala testowac kod main() na wszystkich danych testowych na raz
-  //   wejscie: pary plikow *.in i *.out w biezacym folderze
+  //   wejscie: pary plikow *.in i *.out w biezacym folderze (albo w podfolderach in out)
   //   wyjscie: wynik porownania *.out z utworzonymi przez testowy kod *_t.out
   //   (w tym, wynnik porownania, ostatnie dane, ilosc sprawdzonych wierszy, czas wykonania)
   // Funkcje mozna wywolac zamiast main() dzieki deklaracji static - patrz na koncu
@@ -113,18 +113,29 @@ int test_main_on_testpack() {
     vector<string> files; // wektor na listy plikow
     double total_time = 0, max_time = 0, tst_count = 0; // calk. i max czas wykonania, il. testów
 
-    files = list_dir(".", "*_t.out"); // znajdz i usun stare pliki testowe *_t.out
-    for(int f = 0; f < files.size(); ++f) remove(files[f].c_str());
+    string in_folder = ".", out_folder = ".", t_out_folder = "."; // ewentualne podfoldery z testami
+    files = list_dir("./in", "*.in"); // sprawdz, czy istnieja pliki w folderze in
+    if(files.size()>0) {
+        files = list_dir("./out", "*.out"); // czy istnieja pliki w folderze out
+        if(files.size()>0) {
+            in_folder = "./in";
+            out_folder = "./out";
+            t_out_folder = "./out";
+        }
+    }
+
+    files = list_dir(t_out_folder, "*_t.out"); // znajdz i usun stare pliki testowe *_t.out
+    for(int f = 0; f < files.size(); ++f) remove(string(t_out_folder + "/" + files[f]).c_str());
 
     // Uruchamiaj testy z przekierowanym wejsciem z kolejnych *.in z wyjsciem do plikow *_t.out
-    files = list_dir(".", "*.in"); // znajdz pliki *.in w folderze programu i zapisz w wektorze
+    files = list_dir(in_folder, "*.in"); // znajdz pliki *.in w folderze programu i zapisz w wektorze
     for(int f = 0; f < files.size(); ++f) { // powtarzaj dla dla znalezionych plikow
         in_file = files[f]; // pobierz kolejna nazwe wejsciowego pliku testowego
-        test_file = in_file.substr(0,in_file.find_last_of(".")) + "_t.out"; // i nazwij wyjsciowy
+        test_file = in_file.substr(0,in_file.find_last_of(t_out_folder)) + "_t.out"; // nazwij wyjsciowy
 
         ifstream inFile; ofstream testFile;
-        inFile.open(in_file.c_str()); //otworz plik in do danych wejsciowych
-        testFile.open(test_file.c_str()); //otworz plik out do danych wyjsciowych
+        inFile.open(string(in_folder + "/" + in_file).c_str()); //otworz plik in do danych wejsciowych
+        testFile.open(string(t_out_folder + "/" + test_file).c_str()); //i _t.out do danych wyjsciowych
 
         ios_base::sync_with_stdio(false);cout.tie(NULL);cin.tie(NULL); // wylacz synchro. we/wy
         // jest szybciej, ale moze tez powodowac problemy z pomieszanym wyjscie - wtedy zakomentuj 
@@ -140,12 +151,12 @@ int test_main_on_testpack() {
   
         clock_t time_stop = clock(); // zlap czas zakonczenia
 
-        // wyrzuc dane z pamieci na dysk - zapisze sie plik wyjsciowy
+        // Wyrzuc dane z pamieci na dysk - zapisze sie plik wyjsciowy
         cout.flush();
 
         // Teraz, sprawdz poprawnosc wyniku przez porownanie pary plikow *.out i *_t.out
-        out_file = in_file.substr(0,in_file.find_last_of(".")) + ".out"; // nazwa pliku do porownania
-        result = compare_files(test_file, out_file); // porownaj i zapamietaj opis rezultatu
+        out_file = in_file.substr(0,in_file.find_last_of(out_folder)) + ".out"; // nazwa pliku do porownania
+        result = compare_files(t_out_folder + "/" + test_file, out_folder + "/" + out_file); // porownaj 
         // Wypisz rezultat testu dla danej pary
         cerr << left << setw(12) << in_file.substr(0,in_file.find_last_of(".")); // nazwa pl.testowego
         cerr << right << setw(7) << setprecision(2) << ((double)(time_stop - time_start) / CLOCKS_PER_SEC);
