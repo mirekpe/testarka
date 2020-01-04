@@ -2,7 +2,7 @@
 
 // Skopiuj testarka.cpp do folderu swojego programu i podlacz przez dodanie w programie w ostatniej linii:
 //   #include "testarka.cpp"
-// Uwaga !: zmienne deklarowane przed main() należy ew. wyzerować w main(), np., fill(tabl,tabl+rozmiar);
+// Uwaga !: zmienne deklarowane przed main() nalezy ew. wyzerowac w main(), np., fill(tabl,tabl+rozmiar);
 //  poniewaz testarka wywoluje main() wielokrotnie, te zmienne sa wyzerowane tylko za pierwszym razem
 // Uwaga 2: testarka wywoluje:  ios_base::sync_with_stdio(false);  - aby przyspieszyc dzialanie,
 //  jezeli sam nie umiescisz tej funkcji w main(), po wylaczeniu testarki program moze znacznie spowolnic
