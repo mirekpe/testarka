@@ -1,36 +1,26 @@
+//--------------------------testarka-----------ver2--(pozwala-debugowac-i-dziala-tez-na-linuksie)-------
+
+// Skopij testarka.cpp do folderu swojego programu i podlacz przez dodanie w jego ostatniej linii:
+//   #include "testarka.cpp"
+// Uwaga !: zmienne deklarowane przed main() należy ew. wyzerować w main(), np., fill(tabl,tabl+rozmiar);
+//  poniewaz testarka wywoluje main() wielokrotnie, te zmienne sa wyzerowane tylko za pierwszym razem
+// Uwaga 2: testarka wywoluje:  ios_base::sync_with_stdio(false);  - aby przyspieszyc dzialanie,
+//  jezeli sam nie umiescisz tej funkcji w main(), po wylaczeniu testarki program moze znacznie spowolnic
+// Uwaga 3: nie zapomnij wylaczyc testarki w gotowym programie (skasuj: #include "testarka.cpp")  
+
+// Testarka wywola funkcje main dla wszystkich plikow *.in w foderze programu
+//  Pliki *.in (wejsciowe) i *.out (do porownania) przygotuj sam, albo pobierz ze strony olimpiady
+//  i wrzuc do folderu z progamem. Powinny byc w parach o takiej samej nazwie przed kropka.
+//  Skompiluj i uruchom program (na swoim komputerze! - na Ideone nie bedzie dzialac)
+
 #include <bits/stdc++.h>
 using namespace std;
- 
- 
-bool check7(int i) {
-    for (int c = i; c > 0; c = c / 10) if ((i % 7 == 0) || (c % 10 == 7)) return true;
-    return false;
-}
- 
- 
-int main() { //Zadanie plum
-    int A, B;
-    cin >> A >> B;
-    for (int i = A; i <= B; i++) if(check7(i)) cout << "plum" << "\n"; else cout << i << "\n";
-    return 0;
-}
- 
- 
-//-------------------------------testarka---------------------------------------
- 
-// Paste your code above, the main function will be called for all *.in files in the program foder
- 
-//  Prepare *.in (input) and *.out (for comparison) files yourself, 
-//  or download them from the Olympics website and throw it into the folder with the code.
-//  They should be in pairs of the same name before the dot . 
-//  Compile and run the program (on your computer! - Ideone will not work)
- 
 bool iflike(const string chktxt, const string mask) {
-// The function checks if the given text matches the pattern, e.g., "to_our_olimpics" matches "to*olimp?*"
-    // note: corrected idea from: http://www.geeksforgeeks.org/wildcard-character-matching/
+// Funkcja sprawdza, czy podany tekst pasuje do wzorca, np., "nasza_olimpiada" pasuje do "na*olimp?*"
+   // corrected idea from: http: // www.geeksforgeeks.org/wildcard-character-matching/
     if (mask == "" && chktxt == "") return true;
     if (mask.substr(0,2) == "**") return iflike(chktxt, mask.substr(1)); //added by me
-    //    the source working on the character tables can also be improved by adding: 
+    //    the source working on the character tables can also be improved by adding:
     //    if (*first  == '*' && *(first +1) != '\0' && *(first +1) == '*') return match(first+1, second);
     if (mask.substr(0,1) == "*" && mask.length() > 1 && chktxt == "") return false;
     if (mask.substr(0,1) == "?" || mask.substr(0,1) == chktxt.substr(0,1))
@@ -38,14 +28,14 @@ bool iflike(const string chktxt, const string mask) {
     if (mask.substr(0,1) == "*") return iflike(chktxt, mask.substr(1)) || iflike(chktxt.substr(1), mask);
     return false;
 }
- 
+
 #include <dirent.h>
+
 vector<string> list_dir(const string& folder, const string& filemask = "*") {
-// The function returns a file list from a given folder and pattern, e.g., list_dir("c:\test", "*.in")
-//  input: folder to be searched
-//     and optionally a pattern/filter for file names 
-//     with "*" characters (whatever) and/or "?" (any one character)
-//  result: a list of files found in the folder (according to the pattern, if provided) - as vector
+// Funkcja zwraca liste plikow z podanego folderu i wzorca, np., list_dir("c:\test", "*.in")
+//  wejscie: folder do przeszukania
+//     i opcjonalnie wzorzec/filtr nazw plikow ze znakami "*" (cokolwiek) i/lub "?" (dowolny jeden znak)
+//  wynik: lista znalezionych plikow w folderze (zgodnych ze wzorcem, jezeli go podano) w postaci wektora
     vector<string> fn_list;
     DIR* dir = opendir(folder.c_str());
     if (dir != NULL) {
@@ -56,16 +46,16 @@ vector<string> list_dir(const string& folder, const string& filemask = "*") {
     } else perror ("");
     return fn_list;
 }
- 
+
 string compare_files(string testName, string outName) {
-// The function compares two files line by line, ignores blank lines at the end
-//   input: file name for comparison
-//   output: result, last fragment, number of rows; first two characters- :) when OK, :( when wrong
+// Funkcja porownuje dwa pliki linia po linii, ignoruje puste linie na koncu
+//   wejscie: nazwy plikow do porownania
+//   wyjscie: rezultat, ostatni fragment, liczba wierszy; dwa pierwsze znaki - :) kiedy OK, :( kiedy zle
     ifstream outFile, testFile;
-    testFile.open(testName.c_str()); // Open an output file
-    outFile.open(outName.c_str()); // Open a file with the data to compare
- 
-    // Compare all the lines in the test and out, ignore the blanks in the end
+    testFile.open(testName.c_str()); // Otworz plik z danymi wyjsciowymi
+    outFile.open(outName.c_str()); // Otworz plik z danymi do porownania
+
+    // Porownuj wszystkie linie w test i out, ignoruj puste na koncu
     string testLine, outLine, checkText = "", trailers;
     int chkLinesCnt = 0, errLineNo = 0;
     bool testEmpty, outEmpty;
@@ -73,127 +63,114 @@ string compare_files(string testName, string outName) {
         testLine = ""; outLine = "";
         outEmpty = getline(outFile, outLine).eof();
         testEmpty = getline(testFile ,testLine).eof();
+        if(outLine != "" && outLine.substr(outLine.size() - 1) == "\r")  // ostatni znak-powrot karetki
+            outLine = outLine.substr(0, outLine.size() - 1); // obetnij go
+        if(testLine != "" && testLine.substr(testLine.size() - 1) == "\r") // ostatni znak-powrot karetki
+            testLine = testLine.substr(0, testLine.size() - 1); // obetnij go
         if(testLine != "" || outLine != "") {
             chkLinesCnt++;
             if(testLine != outLine) {
                 errLineNo = i;
                 checkText.append( testLine + " != " + outLine + "  ");
                 break;
-            } else checkText.append( testLine + "=" + outLine + "  ");
+            } else checkText.append( testLine + "  ");
         }
         if(testEmpty && outEmpty) break;
     }
- 
+
     outFile.close();
     testFile.close();
- 
-    // Prepare/shorten and specify the result
-    int checkTextLen = checkText.length();
-    if(checkTextLen>63) trailers = "..."; else trailers = "";
-    checkTextLen = min((63 - int(trailers.length())), checkTextLen);
-    char lineNoChr[100];
-    if((errLineNo)==0) {
-        itoa(chkLinesCnt,lineNoChr,10);
-        return ":) good " + trailers + checkText.substr(checkText.length() - checkTextLen)
-            + lineNoChr + "r ";
-    } else {
-        itoa(errLineNo,lineNoChr,10);
-        return ":( BAD! " + trailers + checkText.substr(checkText.length() - checkTextLen)
-            + " line " + lineNoChr + " ";
-    }
-}
- 
- 
-//-------------------------test-main-------------------------------
- 
-#include <bits/stdc++.h>
-#include <windows.h>
- 
-int test_main_on_testpack() {
-  // The program allows you to test the main() code on all test data at once.
-  //   input: pairs of *.in and *.out files in the current folder
-  //   output: result of comparing *.out with those created by the tested code *_t.out
-  //   (including: comparison result, last data, number of checked lines, execution time)
-  // Functions can be called instead of main() because of static declaration - see at the end
-    int lastReturnCode = 0, testOkCount = 0;
-    string in_file, test_file, out_file, result;
- 
-    string app_comm_line = GetCommandLine(); // The path and the name and arguments of the program
-    if(iflike(app_comm_line,"*nowRunMain*")) // Check if the program has been called up for testing
- 
-       lastReturnCode = main();  // If yes (with the nowRunMain argument), then run the main()
- 
-    else {
-        vector<string> files; // Vector on the file list
- 
-        // Delete old test files *_t.out
-        files = list_dir(".", "*_t.out");
-        for(int f = 0; f < files.size(); ++f)
-            remove(files[f].c_str());
- 
-        // Run tests with redirected input from successive *.in and output to *_t.out files
-        files = list_dir(".", "*.in");
-        for(int f = 0; f < files.size(); ++f) {
-            in_file = files[f];
-            test_file = in_file.substr(0,in_file.find_last_of(".")) + "_t.out";
- 
-            cout << in_file << " ";
-            clock_t time_start = clock();
- 
- 
-          // Now, invoke yourself, but with the command to run main() - i.e. for test
-          // with redirected input from all of *.in and output to *_t.*out
-            app_comm_line = app_comm_line + " nowRunMain < " + in_file + " > " + test_file;
-            system(app_comm_line.c_str());
- 
-          // Instead of call himself, this code can call exe programs from the current folder
-          //  (others than the tester, these should be the ones compiled from your code)
-          // with redirected input from all of *.in and an output to *_t.*out
-          // (    so a universal tester can be compiled, to do it:
-          //      comment on the line above with: system(app_comm_line.c_str());
-          //      and uncomment these six lines below - compile and create an exe file 
-          //      paste it into a test folder and run it "manually". )
-            /*
-            vector<string> filesExe = list_dir(".", "*.exe");
-            for(int f = 0; f < filesExe.size(); ++f)
-                if( !iflike(app_comm_line, "*" + filesExe[f] + "*") ) {
-                    string exe_comm_line = filesExe[f] + " nowRunMain < " + in_file + " > " + test_file;
-                    system(exe_comm_line.c_str()); // nowRunMain, if your code had already had a tester :)
-                }
-            */
- 
- 
-            clock_t time_stop = clock();
- 
-            // Now, validate the result by comparing the file pairs *.out and *_t.out
-            out_file = in_file.substr(0,in_file.find_last_of(".")) + ".out";
-            result = compare_files(test_file, out_file);
-            if(result.substr(0,2) == ":)") testOkCount++;
- 
-            // Print the test result for the pair
-            cout << result << ((double)(time_stop - time_start) / CLOCKS_PER_SEC) << "s\n";
- 
-        }
-        // Write a summary and wait for Enter
-        cout << "\n" << (testOkCount * 100 / files.size()) << "% tests OK,";
-        cout << " press Enter, to finish.\n";
-        cin.get();
-    }
- 
-    // Return what main() returned, but with emergency exit() so that you don't jump into main()
-    exit(lastReturnCode);
-    //return 0;
-}
-     
-// Testarka (tester) is my first adventure with C/C++ and I would like to ask for your comments. 
-// This code helps my son with his programming tasks.
-// The idea and the code are mine, you can copy it (but see iflike).
-// C++ compiler can be almost any version
-    
-    
-     
-// To do something instead of main, we use static declaration, which is executed before main()
-//  and our function will be performed because its result is to be set to TEST at the time of declaration
-static int TEST = test_main_on_testpack();
-     
 
+    // Przygotuj/skroc i podaj rezultat
+    int checkTextLen = checkText.length();
+    if(checkTextLen>42) trailers = "..."; else trailers = "";
+    checkTextLen = min((42 - int(trailers.length())), checkTextLen);
+    stringstream respStr;
+    if((errLineNo)==0) {
+        respStr << ":) +   " << trailers 
+            << checkText.substr(checkText.length() - checkTextLen) ;
+        if(chkLinesCnt != 1) respStr << "  /" << chkLinesCnt <<"";
+    } else {
+        respStr << ":O -   " << trailers 
+            << checkText.substr(checkText.length() - checkTextLen)
+            << " /line: " << errLineNo;
+    }
+    return respStr.str();
+}
+
+//-------------------------test-main-------------------------------
+
+#include <unistd.h>
+int test_main_on_testpack() {
+  // Program pozwala testowac kod main() na wszystkich danych testowych na raz
+  //   wejscie: pary plikow *.in i *.out w biezacym folderze
+  //   wyjscie: wynik porownania *.out z utworzonymi przez testowy kod *_t.out
+  //   (w tym, wynnik porownania, ostatnie dane, ilosc sprawdzonych wierszy, czas wykonania)
+  // Funkcje mozna wywolac zamiast main() dzieki deklaracji static - patrz na koncu
+
+    int lastReturnCode = 0, testOkCount = 0; // zmienne na kod wyjscia z main i ranking
+    string in_file, test_file, out_file, result; // zmienne na nazwy plikow i rezultaty
+    vector<string> files; // wektor na listy plikow
+    double total_time = 0, max_time = 0, tst_count = 0; // calk. i max czas wykonania, il. testów
+
+    files = list_dir(".", "*_t.out"); // znajdz i usun stare pliki testowe *_t.out
+    for(int f = 0; f < files.size(); ++f) remove(files[f].c_str());
+
+    // Uruchamiaj testy z przekierowanym wejsciem z kolejnych *.in z wyjsciem do plikow *_t.out
+    files = list_dir(".", "*.in"); // znajdz pliki *.in w folderze programu i zapisz w wektorze
+    for(int f = 0; f < files.size(); ++f) { // powtarzaj dla dla znalezionych plikow
+        in_file = files[f]; // pobierz kolejna nazwe wejsciowego pliku testowego
+        test_file = in_file.substr(0,in_file.find_last_of(".")) + "_t.out"; // i nazwij wyjsciowy
+
+        ifstream inFile; ofstream testFile;
+        inFile.open(in_file.c_str()); //otworz plik in do danych wejsciowych
+        testFile.open(test_file.c_str()); //otworz plik out do danych wyjsciowych
+
+        ios_base::sync_with_stdio(false);cout.tie(NULL);cin.tie(NULL); // wylacz synchro. we/wy
+        // jest szybciej, ale moze tez powodowac problemy z pomieszanym wyjscie - wtedy zakomentuj 
+
+        std::streambuf * cincon = cin.rdbuf(inFile.rdbuf()); // przekieruj wejscie na pliku in
+        std::streambuf * coutcon = cout.rdbuf(testFile.rdbuf()); // przekieruj wyjscie na plik out
+
+
+        // A teraz, wywolaj main() - czyli test i zmierz czas
+        clock_t time_start = clock(); //zlap czas startu
+        
+        lastReturnCode = main();  //  uruchom kod main()
+  
+        clock_t time_stop = clock(); // zlap czas zakonczenia
+
+        // cout << flush; // wyrzuc dane z pamieci na dysk - zapisze sie plik wyjsciowy
+        cout.flush();
+
+        // Teraz, sprawdz poprawnosc wyniku przez porownanie pary plikow *.out i *_t.out
+        out_file = in_file.substr(0,in_file.find_last_of(".")) + ".out"; // nazwa pliku do porownania
+        result = compare_files(test_file, out_file); // porownaj i zapamietaj opis rezultatu
+        // Wypisz rezultat testu dla danej pary
+        cerr << left << setw(12) << in_file.substr(0,in_file.find_last_of(".")); // nazwa pl.testowego
+        cerr << right << setw(7) << setprecision(2) << ((double)(time_stop - time_start) / CLOCKS_PER_SEC);
+        cerr << "s " << result << "\n";
+        if(result.substr(0,2) == ":)") testOkCount++; // jezeli ok, to dodaj do pozytywnych
+        total_time += (double)(time_stop - time_start);
+        max_time = max(max_time, (double)(time_stop - time_start));
+        tst_count ++;
+    }
+    if(files.size() == 0)
+        cerr << "No files: " << getcwd(NULL, 0) << "/*.in"; 
+    else { // wypisz podsumowanie
+        cerr << "\n" << (testOkCount * 100 / files.size()) << "% OK / " << tst_count; //% ok z ilości 
+        cerr << ".  Total: " << (total_time / CLOCKS_PER_SEC) << " s.";  // i czas całkowity
+        cerr << "  Max.: " << (max_time / CLOCKS_PER_SEC) << " s.";  // i czas maksymalny
+    }
+    //cerr << ", czekam 20 sek, aby zakonczyc teraz, wcisnij Ctrl+C.\n"; // wyjcie na cerr wymusi wypisanie
+    //for(clock_t time_end = clock() + 20 * CLOCKS_PER_SEC; clock() < time_end;); //petla czekania
+    cerr << "\n\n"; 
+    exit(lastReturnCode); // Zwroc to, co ostatnio main(), ale z wyjsciem exit(), przerywajac program
+}
+// Testarka to moja pierwsza przygoda z C/C++ i bardzo prosze o uwagi. Pomaga mojemu synowi w zadaniach.
+// Pomysly i kod moje (ale patrz iflike), kopiowac mozna. Wersja C++ dowolna. Testowane na Win10 i Ubuntu
+//                                                              p.s. ani ja ani syn nie mamy na imie Arek
+
+// Aby zrobic cos zamiast main wykorzystamy to, ze deklaracje zmiennych static wykonywane sa przed main,
+//  a przy tym wykona sie nasza funkcja, poniewaz jej wartosc ma byc podstawiona przy deklaracji TEST
+static int TEST = test_main_on_testpack();
