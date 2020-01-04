@@ -140,7 +140,7 @@ int test_main_on_testpack() {
   
         clock_t time_stop = clock(); // zlap czas zakonczenia
 
-        // cout << flush; // wyrzuc dane z pamieci na dysk - zapisze sie plik wyjsciowy
+        // wyrzuc dane z pamieci na dysk - zapisze sie plik wyjsciowy
         cout.flush();
 
         // Teraz, sprawdz poprawnosc wyniku przez porownanie pary plikow *.out i *_t.out
