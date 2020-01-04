@@ -162,8 +162,6 @@ int test_main_on_testpack() {
         cerr << ".  Total: " << (total_time / CLOCKS_PER_SEC) << " s.";  // i czas całkowity
         cerr << "  Max.: " << (max_time / CLOCKS_PER_SEC) << " s.";  // i czas maksymalny
     }
-    //cerr << ", czekam 20 sek, aby zakonczyc teraz, wcisnij Ctrl+C.\n"; // wyjcie na cerr wymusi wypisanie
-    //for(clock_t time_end = clock() + 20 * CLOCKS_PER_SEC; clock() < time_end;); //petla czekania
     cerr << "\n\n"; 
     exit(lastReturnCode); // Zwroc to, co ostatnio main(), ale z wyjsciem exit(), przerywajac program
 }
