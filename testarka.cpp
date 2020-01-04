@@ -113,7 +113,7 @@ int test_main_on_testpack() {
     vector<string> files; // wektor na listy plikow
     double total_time = 0, max_time = 0, tst_count = 0; // calk. i max czas wykonania, il. testów
 
-    string in_folder = ".", out_folder = ".", t_out_folder = "."; // ewentualne podfoldery z testami
+    string in_folder = ".", out_folder = ".", t_out_folder = "."; // foldery z testami
     files = list_dir("./in", "*.in"); // sprawdz, czy istnieja pliki w folderze in
     if(files.size()>0) {
         files = list_dir("./out", "*.out"); // czy istnieja pliki w folderze out
