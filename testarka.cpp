@@ -1,4 +1,4 @@
-//--------------------------testarka-----------ver2--(pozwala-debugowac-i-dziala-tez-na-linuksie)-------
+//--------------------------testarka-----ver2.1--(pozwala-debugowac-i-dziala-tez-na-linuksie-i-macu)------
 
 // Skopiuj testarka.cpp do folderu swojego programu i podlacz przez dodanie w programie w ostatniej linii:
 //   #include "testarka.cpp"
@@ -6,15 +6,24 @@
 //  poniewaz testarka wywoluje main() wielokrotnie, te zmienne sa wyzerowane tylko za pierwszym razem
 // Uwaga 2: testarka wywoluje:  ios_base::sync_with_stdio(false);  - aby przyspieszyc dzialanie,
 //  jezeli sam nie umiescisz tej funkcji w main(), po wylaczeniu testarki program moze znacznie spowolnic
-// Uwaga 3: nie zapomnij wylaczyc testarki w gotowym programie (skasuj: #include "testarka.cpp")  
+// Uwaga 3: nie zapomnij wylaczyc testarki w gotowym programie (skasuj: #include "testarka.cpp") 
+//  i sprawdz, czy program kompiluje sie bez niej
 
 // Testarka wywola funkcje main dla wszystkich plikow *.in w foderze programu (ew. w podfolderach in out)
 //  Pliki *.in (wejsciowe) i *.out (do porownania) przygotuj sam, albo pobierz ze strony olimpiady
 //  i wrzuc do folderu z progamem. Powinny byc w parach o takiej samej nazwie przed kropka.
 //  Skompiluj i uruchom program (na swoim komputerze! - na Ideone nie bedzie dzialac)
 
-#include <bits/stdc++.h>
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <unistd.h>
+#include <fstream>
+#include <sstream>
+#include <dirent.h>
+#include <vector>
 using namespace std;
+
 bool iflike(const string chktxt, const string mask) {
 // Funkcja sprawdza, czy podany tekst pasuje do wzorca, np., "nasza_olimpiada" pasuje do "na*olimp?*"
    // corrected idea from: http: // www.geeksforgeeks.org/wildcard-character-matching/
@@ -29,8 +38,6 @@ bool iflike(const string chktxt, const string mask) {
     return false;
 }
 
-#include <dirent.h>
-
 vector<string> list_dir(const string& folder, const string& filemask = "*") {
 // Funkcja zwraca liste plikow z podanego folderu i wzorca, np., list_dir("c:\test", "*.in")
 //  wejscie: folder do przeszukania
@@ -43,7 +50,7 @@ vector<string> list_dir(const string& folder, const string& filemask = "*") {
         while((de = readdir(dir)) != NULL)
             if(iflike(de->d_name, filemask)) fn_list.push_back(de->d_name);
         closedir(dir);
-    } // else perror (""); // Zm001. zakomentowane - nie wypisywac bledow, gdy nie ma podfolderow in out   
+    } // else perror (""); // Zm001. zakomentowane - nie wypisywac bledow, gdy nie ma podfolderow in out
     return fn_list;
 }
 
@@ -100,7 +107,6 @@ string compare_files(string testName, string outName) {
 
 //-------------------------test-main-------------------------------
 
-#include <unistd.h>
 int test_main_on_testpack() {
   // Program pozwala testowac kod main() na wszystkich danych testowych na raz
   //   wejscie: pary plikow *.in i *.out w biezacym folderze (albo w podfolderach in out)
@@ -129,6 +135,7 @@ int test_main_on_testpack() {
 
     // Uruchamiaj testy z przekierowanym wejsciem z kolejnych *.in z wyjsciem do plikow *_t.out
     files = list_dir(in_folder, "*.in"); // znajdz pliki *.in w folderze programu i zapisz w wektorze
+    sort(files.begin(), files.end()); // posortuj nazwy plikow
     for(int f = 0; f < files.size(); ++f) { // powtarzaj dla dla znalezionych plikow
         in_file = files[f]; // pobierz kolejna nazwe wejsciowego pliku testowego
         test_file = in_file.substr(0,in_file.find_last_of(t_out_folder)) + "_t.out"; // nazwij wyjsciowy
