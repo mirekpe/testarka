@@ -12,6 +12,7 @@
 // Testarka wywola funkcje main dla wszystkich plikow *.in w foderze programu (ew. w podfolderach in out)
 //  Pliki *.in (wejsciowe) i *.out (do porownania) przygotuj sam, albo pobierz ze strony olimpiady
 //  i wrzuc do folderu z progamem. Powinny byc w parach o takiej samej nazwie przed kropka.
+//  (moga byc tez w podloderze ./in lub ./inout , albo osobno w podfolderach ./in ./out)
 //  Skompiluj i uruchom program (na swoim komputerze! - na Ideone nie bedzie dzialac)
 
 #include <iostream>
@@ -57,7 +58,7 @@ vector<string> list_dir(const string& folder, const string& filemask = "*") {
 string compare_files(string testName, string outName) {
 // Funkcja porownuje dwa pliki linia po linii, ignoruje puste linie na koncu
 //   wejscie: nazwy plikow do porownania
-//   wyjscie: rezultat, ostatni fragment, liczba wierszy; dwa pierwsze znaki - :) kiedy OK, :( kiedy zle
+//   wyjscie: rezultat, ostatni fragment, liczba wierszy; dwa pierwsze znaki - :) kiedy OK, :O kiedy zle
     ifstream outFile, testFile;
     testFile.open(testName.c_str()); // Otworz plik z danymi wyjsciowymi
     outFile.open(outName.c_str()); // Otworz plik z danymi do porownania
@@ -109,7 +110,7 @@ string compare_files(string testName, string outName) {
 
 int test_main_on_testpack() {
   // Program pozwala testowac kod main() na wszystkich danych testowych na raz
-  //   wejscie: pary plikow *.in i *.out w biezacym folderze (albo w podfolderach in out)
+  //   wejscie: pary plikow *.in i *.out w biezacym folderze (lub podfolderach in,out lub w in lub inout)
   //   wyjscie: wynik porownania *.out z utworzonymi przez testowy kod *_t.out
   //   (w tym, wynnik porownania, ostatnie dane, ilosc sprawdzonych wierszy, czas wykonania)
   // Funkcje mozna wywolac zamiast main() dzieki deklaracji static - patrz na koncu
