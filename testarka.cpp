@@ -1,4 +1,4 @@
-//--------------------------testarka-----ver2.1--(pozwala-debugowac-i-dziala-tez-na-linuksie-i-macu)------
+//--------------------------testarka-----ver2.2--(pozwala-debugowac-i-dziala-tez-na-linuksie-i-macu)------
 
 // Skopiuj testarka.cpp do folderu swojego programu i podlacz przez dodanie w programie w ostatniej linii:
 //   #include "testarka.cpp"
@@ -122,11 +122,25 @@ int test_main_on_testpack() {
     string in_folder = ".", out_folder = ".", t_out_folder = "."; // foldery z testami
     files = list_dir("./in", "*.in"); // sprawdz, czy istnieja pliki w folderze in
     if(files.size()>0) {
-        files = list_dir("./out", "*.out"); // czy istnieja pliki w folderze out
+        files = list_dir("./out", "*.out"); // czy istnieja pliki *.in w folderze out
         if(files.size()>0) {
             in_folder = "./in";
             out_folder = "./out";
             t_out_folder = "./out";
+        } else {
+            files = list_dir("./in", "*.out"); // czy istnieja pliki *.out w folderze in
+            if(files.size()>0) {
+                in_folder = "./in";
+                out_folder = "./in";
+                t_out_folder = "./in";
+            }
+        }
+    } else {
+        files = list_dir("./inout", "*.in"); // czy istnieja pliki *.in w folderze inout
+        if(files.size()>0) {
+            in_folder = "./inout";
+            out_folder = "./inout";
+            t_out_folder = "./inout";
         }
     }
 
@@ -138,7 +152,7 @@ int test_main_on_testpack() {
     sort(files.begin(), files.end()); // posortuj nazwy plikow
     for(int f = 0; f < files.size(); ++f) { // powtarzaj dla dla znalezionych plikow
         in_file = files[f]; // pobierz kolejna nazwe wejsciowego pliku testowego
-        test_file = in_file.substr(0,in_file.find_last_of(t_out_folder)) + "_t.out"; // nazwij wyjsciowy
+        test_file = in_file.substr(0,in_file.find_last_of(".")) + "_t.out"; // nazwij wyjsciowy
 
         ifstream inFile; ofstream testFile;
         inFile.open(string(in_folder + "/" + in_file).c_str()); //otworz plik in do danych wejsciowych
@@ -162,7 +176,7 @@ int test_main_on_testpack() {
         cout.flush();
 
         // Teraz, sprawdz poprawnosc wyniku przez porownanie pary plikow *.out i *_t.out
-        out_file = in_file.substr(0,in_file.find_last_of(out_folder)) + ".out"; // nazwa pliku do porownania
+        out_file = in_file.substr(0,in_file.find_last_of(".")) + ".out"; // nazwa pliku do porownania
         result = compare_files(t_out_folder + "/" + test_file, out_folder + "/" + out_file); // porownaj 
         // Wypisz rezultat testu dla danej pary
         cerr << left << setw(12) << in_file.substr(0,in_file.find_last_of(".")); // nazwa pl.testowego
