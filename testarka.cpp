@@ -25,6 +25,8 @@
 #include <vector>
 using namespace std;
 
+int main(); //tylko zapowiedz
+
 bool iflike(const string chktxt, const string mask) {
 // Funkcja sprawdza, czy podany tekst pasuje do wzorca, np., "nasza_olimpiada" pasuje do "na*olimp?*"
    // corrected idea from: http: // www.geeksforgeeks.org/wildcard-character-matching/
